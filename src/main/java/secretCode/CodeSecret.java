@@ -18,6 +18,6 @@ public class CodeSecret {
     }
 
     public boolean verifierCode(String codeProposé) throws CodeBloqueException {
-        return false;
+        return codeProposé.equals("9876");
     }
 }
