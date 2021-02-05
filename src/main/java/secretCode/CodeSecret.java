@@ -1,23 +1,45 @@
 package secretCode;
 
 import org.mockito.Mockito;
-
 import java.util.Random;
 
 public class CodeSecret {
 
-    private final CodeSecret mock;
+    private final String code;
+    private boolean codeDejaRevele;
+    private Random random;
+    private int nbEssaisRestants;
 
     public CodeSecret(Random random) {
-        mock = Mockito.mock(CodeSecret.class);
-        Mockito.when(mock.revelerCode()).thenReturn("9876");
+        this.random = random;
+        codeDejaRevele = false;
+        code = createCode(random);
+        nbEssaisRestants = 3;
+    }
+
+    private String createCode(Random random) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            builder.append(random.nextInt(10));
+        }
+        return builder.toString();
     }
 
     public String revelerCode() {
-        return mock.revelerCode();
+        if (!codeDejaRevele) {
+            codeDejaRevele = true;
+            return code;
+        }
+        return "xxxx";
     }
 
     public boolean verifierCode(String codeProposé) throws CodeBloqueException {
-        return codeProposé.equals("9876");
+        if (nbEssaisRestants <= 0) throw new CodeBloqueException();
+        if (!code.equals(codeProposé)){
+            nbEssaisRestants--;
+            return false;
+        }
+        nbEssaisRestants=3;
+        return true;
     }
 }
